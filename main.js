@@ -1,32 +1,59 @@
-import { Player } from "./player.js";
-/* The load even will make sure the JavScript waits for all the resources such as css and images to be fully loaded before running the code */
-window.addEventListener('load', function()
-{
-  const canvas = document.getElementById('canvas1')
-  const ctx = canvas.getContext('2d');
-  canvas.width = 500;
-  canvas.height = 500;
+const canvas = document.querySelector('canvas')
+/** this is a 2d game */
+const c = canvas.getContext('2d');
+console.log(c)
 
-  class Game {
-    constructor(width,height){
-      this.width = width;
-      this.height = height;
-      /* this relates to the Game class */
-      this.player = new Player(this)
-    }
-    update(){
+canvas.width = innerWidth
+canvas.height = innerHeight
 
-
-    }
-    draw(){
-      this.player.draw(context)
-
-
-    }
+class Boundary {
+  static width = 40
+  static height = 40
+  constructor({position}) {
+    /*Dynamic positioning  */
+    this.position = position
+    /* Must never change as this will be the boundary squares that Pac-man won't be able to get out of */
+    this.width = 40
+    this.height = 40
   }
-  const game = new Game(canvas.width, canvas.height)
-  console.log(game)
-  
 
-});
+  draw() {
+    c.fillStyle = 'blue'
+    c.fillRect(this.position.x, this.position.y, this.width, this.height)
+  }
+}
+/* This creates the map for teh game. The dashes symbolize the boxes while the space symbolize the playable area. */
+const map = [
+  ['-', '-', '-', '-', '-', '-', ],
+  ['-', ' ', ' ', ' ', ' ', '-', ],
+  ['-', ' ', '-', '-', ' ', '-', ],
+  ['-', ' ', ' ', ' ', ' ', '-', ],
+  ['-', '-', '-', '-', '-', '-', ]
+]
+/* This creates the blu boxes that prevents the player from leaving the game area. */
+const boundaries = []
 
+map.forEach((row, i) => {
+  row.forEach((symbol, j) => {
+    console.log(symbol)
+    switch (symbol) {
+      /* Whenever we hit a dashed line we create a a box and break the loop and reiterate the loop again before hitting another symbol. */
+      case '-':
+        boundaries.push(
+          new Boundary({
+            position: {
+              x: Boundary.width * j,
+              /* This makes sure that it is always 40 below the next square */
+              y: Boundary.height * i
+            }
+          })
+        )
+        break
+    }
+  })
+})
+
+
+boundaries.forEach((boundary) => {
+  boundary.draw()
+})
