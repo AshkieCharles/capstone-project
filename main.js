@@ -1,7 +1,7 @@
 const canvas = document.querySelector('canvas')
 /** this is a 2d game */
 const c = canvas.getContext('2d');
-console.log(c)
+
 
 canvas.width = innerWidth
 canvas.height = innerHeight
@@ -30,7 +30,7 @@ class Player {
   }) {
     this.position = position
     this.velocity = velocity
-    this.radius = 10
+    this.radius = 16
   }
 
   draw() {
@@ -39,6 +39,12 @@ class Player {
     c.fillStyle = "yellow"
     c.fill()
     c.closePath
+  }
+  update() {
+    this.draw()
+    /* Determines the position of the object overtime */
+    this.position.x += this.velocity.x
+    this.position.y += this.velocity.y
   }
 
 }
@@ -54,10 +60,11 @@ const map = [
 ]
 /* This creates the blue boxes that prevents the player from leaving the game area. */
 const boundaries = []
+/* This controls where the player will spawn */
 const player = new Player({
   position: {
-    x:40,
-    y:40
+    x:Boundary.width + Boundary.width / 2,
+    y:Boundary.height + Boundary.height / 2,
   },
   velocity: {
     x:0,
@@ -85,9 +92,41 @@ map.forEach((row, i) => {
   })
 })
 
+/* Create an infinite loop to make sure it redraws the Pac-man everytime. */
+function animate() {
+  requestAnimationFrame(animate)
+  boundaries.forEach((boundary) => {
+    boundary.draw()
+  })
+  player.update()
+}
+
+animate()
 
 boundaries.forEach((boundary) => {
   boundary.draw()
 })
 
-player.draw()
+player.update()
+animate()
+
+
+/* This will listen for the WASD for controlling the movement of the user. */
+window.addEventListener('keydown', ({ key }) => {
+  switch (key) {
+    case 'w':
+      /* The reason why it is a negative number is because in web dev everything starts from the top so it starts from zero. */
+    player.velocity.y = -3
+    break
+    case 'a':
+    player.velocity.x = -3
+    break
+    case 'd':
+    player.velocity.x = 3
+    break
+    case 's':
+    player.velocity.y = 3
+    break
+    
+  }
+})
