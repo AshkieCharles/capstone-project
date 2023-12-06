@@ -49,15 +49,6 @@ class Player {
 
 }
 
-
-/* This creates the map for teh game. The dashes symbolize the boxes while the space symbolize the playable area. */
-const map = [
-  ['-', '-', '-', '-', '-', '-', ],
-  ['-', ' ', ' ', ' ', ' ', '-', ],
-  ['-', ' ', '-', '-', ' ', '-', ],
-  ['-', ' ', ' ', ' ', ' ', '-', ],
-  ['-', '-', '-', '-', '-', '-', ]
-]
 /* This creates the blue boxes that prevents the player from leaving the game area. */
 const boundaries = []
 /* This controls where the player will spawn */
@@ -71,6 +62,35 @@ const player = new Player({
     y:0
   }
 })
+
+
+const keys = {
+  w: {
+    pressed:false
+  },
+  a: {
+    pressed:false
+  },
+  s: {
+    pressed:false
+  },
+  d: {
+    pressed:false
+  }
+}
+
+let lastKey = ''
+
+
+
+/* This creates the map for the game. The dashes symbolize the boxes while the space symbolize the playable area. */
+const map = [
+  ['-', '-', '-', '-', '-', '-', ],
+  ['-', ' ', ' ', ' ', ' ', '-', ],
+  ['-', ' ', '-', '-', ' ', '-', ],
+  ['-', ' ', ' ', ' ', ' ', '-', ],
+  ['-', '-', '-', '-', '-', '-', ]
+]
 
 map.forEach((row, i) => {
   row.forEach((symbol, j) => {
@@ -100,34 +120,63 @@ function animate() {
     boundary.draw()
   })
   player.update()
+  player.velocity.y = 0
+  player.velocity.x = 0
+
+  if (keys.w.pressed && lastKey == 'w') {
+    player.velocity.y = -5
+  } else if (keys.a.pressed && lastKey == 'a') {
+    player.velocity.x = -5
+  } else if (keys.s.pressed && lastKey == 's') {
+    player.velocity.y = 5
+  } else if (keys.d.pressed && lastKey == 'd') {
+    player.velocity.x = 5
+  }
+
+
 }
 
 animate()
 
-boundaries.forEach((boundary) => {
-  boundary.draw()
-})
 
-player.update()
-animate()
 
 
 /* This will listen for the WASD for controlling the movement of the user. */
 window.addEventListener('keydown', ({ key }) => {
   switch (key) {
     case 'w':
-      /* The reason why it is a negative number is because in web dev everything starts from the top so it starts from zero. */
-    player.velocity.y = -3
+    keys.w.pressed = true
+    lastKey = 'w'
     break
     case 'a':
-    player.velocity.x = -3
-    break
-    case 'd':
-    player.velocity.x = 3
+    keys.a.pressed = true
+    lastKey = 'a'
     break
     case 's':
-    player.velocity.y = 3
+    keys.s.pressed = true
+    lastKey = 's'
+    break
+    case 'd':
+    keys.d.pressed = true
+    lastKey = 'd'
     break
     
+  }
+})
+
+window.addEventListener('keyup', ({ key }) => {
+  switch (key) {
+    case 'w':
+    keys.w.pressed = false
+    break
+    case 'a':
+    keys.a.pressed = false
+    break
+    case 's':
+    keys.s.pressed = false
+    break
+    case 'd':
+    keys.d.pressed = false
+    break
   }
 })
