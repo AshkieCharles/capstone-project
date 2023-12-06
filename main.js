@@ -22,6 +22,28 @@ class Boundary {
     c.fillRect(this.position.x, this.position.y, this.width, this.height)
   }
 }
+
+/* This will be the Pac-man/Player */
+class Player {
+  constructor({
+    position, velocity
+  }) {
+    this.position = position
+    this.velocity = velocity
+    this.radius = 10
+  }
+
+  draw() {
+    c.beginPath()
+    c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
+    c.fillStyle = "yellow"
+    c.fill()
+    c.closePath
+  }
+
+}
+
+
 /* This creates the map for teh game. The dashes symbolize the boxes while the space symbolize the playable area. */
 const map = [
   ['-', '-', '-', '-', '-', '-', ],
@@ -30,8 +52,18 @@ const map = [
   ['-', ' ', ' ', ' ', ' ', '-', ],
   ['-', '-', '-', '-', '-', '-', ]
 ]
-/* This creates the blu boxes that prevents the player from leaving the game area. */
+/* This creates the blue boxes that prevents the player from leaving the game area. */
 const boundaries = []
+const player = new Player({
+  position: {
+    x:40,
+    y:40
+  },
+  velocity: {
+    x:0,
+    y:0
+  }
+})
 
 map.forEach((row, i) => {
   row.forEach((symbol, j) => {
@@ -57,3 +89,5 @@ map.forEach((row, i) => {
 boundaries.forEach((boundary) => {
   boundary.draw()
 })
+
+player.draw()
