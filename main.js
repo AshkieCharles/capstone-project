@@ -95,6 +95,7 @@ map.forEach((row, i) => {
 /* Create an infinite loop to make sure it redraws the Pac-man everytime. */
 function animate() {
   requestAnimationFrame(animate)
+  c.clearRect(0, 0, canvas.width, canvas.height)
   boundaries.forEach((boundary) => {
     boundary.draw()
   })
