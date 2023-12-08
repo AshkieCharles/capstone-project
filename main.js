@@ -147,16 +147,38 @@ window.addEventListener('keydown', ({ key }) => {
   switch (key) {
     case 'w':
       /* The reason why it is a negative number is because in web dev everything starts from the top so it starts from zero. */
-    player.velocity.y = -1
+    keys.w.pressed = true
+    lastKey = 'w'
     break
     case 'a':
-    player.velocity.x = -1
+    keys.a.pressed = true
+    lastKey = 'a'
     break
     case 'd':
-    player.velocity.x = 1
+    keys.d.pressed = true
+    lastKey = 'd'
     break
     case 's':
-    player.velocity.y = 1
+    keys.s.pressed = true
+    lastKey = 's'
+    break
+  }
+})
+
+window.addEventListener('keyup', ({ key }) => {
+  switch (key) {
+    case 'w':
+      /* The reason why it is a negative number is because in web dev everything starts from the top so it starts from zero. */
+    keys.w.pressed = false
+    break
+    case 'a':
+    keys.a.pressed = false
+    break
+    case 'd':
+    keys.d.pressed = false
+    break
+    case 's':
+    keys.s.pressed = false
     break
   }
 })
