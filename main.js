@@ -119,8 +119,9 @@ function animate() {
   c.clearRect(0, 0, canvas.width, canvas.height)
   boundaries.forEach((boundary) => {
     boundary.draw()
-      /* This will loop to track if the player overlaps with the boundary walls and reduces the velocity of the user to zero. */
+      /* This will loop to track if the player overlaps with the boundary walls and reduces the velocity of the user to zero. To grab the position of the player when the center point is within a circle we simple need to add or subtract from its position */
     if (
+      /* The top of the player */
       player.position.y - player.radius <= boundary.position.y + boundary.height && 
       player.position.x + player.radius >= boundary.position.x && 
       player.position.y + player.radius >= boundary.position.y && 
