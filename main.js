@@ -119,19 +119,26 @@ function animate() {
   c.clearRect(0, 0, canvas.width, canvas.height)
   boundaries.forEach((boundary) => {
     boundary.draw()
+      /* This will loop to track if the player overlaps with the boundary walls and reduces the velocity of the user to zero. */
+    if (
+      player.position.y - player.radius <= boundary.position.y + boundary.height && 
+      player.position.x + player.radius >= boundary.position.x && 
+      player.position.y + player.radius >= boundary.position.y && 
+      player.position.x - player.radius <= boundary.position.x + boundary.width){console.log('we are colliding')}
+    /* This loop checks whether or not the user player is touching any of the boundaries by grabbing the edges of the x and y coordinates of the boundaries and checking whether or not it overlaps with that of the x and y of the player itself. */
   })
   player.update()
   player.velocity.y = 0
   player.velocity.x = 0
 
   if (keys.w.pressed && lastKey == 'w') {
-    player.velocity.y = -5
+    player.velocity.y = -7
   } else if (keys.a.pressed && lastKey == 'a') {
-    player.velocity.x = -5
+    player.velocity.x = -7
   } else if (keys.s.pressed && lastKey == 's') {
-    player.velocity.y = 5
+    player.velocity.y = 7
   } else if (keys.d.pressed && lastKey == 'd') {
-    player.velocity.x = 5
+    player.velocity.x = 7
   }
 
 
