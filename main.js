@@ -115,6 +115,7 @@ map.forEach((row, i) => {
 /* Create an infinite loop to make sure it redraws the Pac-man everytime. */
 function animate() {
   requestAnimationFrame(animate)
+  /* So we clear the drawing before drawing another one to prevent the creation of a long line. */
   c.clearRect(0, 0, canvas.width, canvas.height)
   boundaries.forEach((boundary) => {
     boundary.draw()
@@ -145,38 +146,17 @@ animate()
 window.addEventListener('keydown', ({ key }) => {
   switch (key) {
     case 'w':
-    keys.w.pressed = true
-    lastKey = 'w'
+      /* The reason why it is a negative number is because in web dev everything starts from the top so it starts from zero. */
+    player.velocity.y = -1
     break
     case 'a':
-    keys.a.pressed = true
-    lastKey = 'a'
-    break
-    case 's':
-    keys.s.pressed = true
-    lastKey = 's'
+    player.velocity.x = -1
     break
     case 'd':
-    keys.d.pressed = true
-    lastKey = 'd'
-    break
-    
-  }
-})
-
-window.addEventListener('keyup', ({ key }) => {
-  switch (key) {
-    case 'w':
-    keys.w.pressed = false
-    break
-    case 'a':
-    keys.a.pressed = false
+    player.velocity.x = 1
     break
     case 's':
-    keys.s.pressed = false
-    break
-    case 'd':
-    keys.d.pressed = false
+    player.velocity.y = 1
     break
   }
 })
