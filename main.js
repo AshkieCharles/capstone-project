@@ -85,11 +85,11 @@ let lastKey = ''
 
 /* This creates the map for the game. The dashes symbolize the boxes while the space symbolize the playable area. */
 const map = [
-  ['-', '-', '-', '-', '-', '-', ],
-  ['-', ' ', ' ', ' ', ' ', '-', ],
-  ['-', ' ', '-', '-', ' ', '-', ],
-  ['-', ' ', ' ', ' ', ' ', '-', ],
-  ['-', '-', '-', '-', '-', '-', ]
+  ['-', '-', '-', '-', '-','-', '-', ],
+  ['-', ' ', ' ', ' ', ' ',' ', '-', ],
+  ['-', ' ', '-', ' ', '-',' ', '-', ],
+  ['-', ' ', ' ', ' ', ' ', ' ','-', ],
+  ['-', '-', '-', '-', '-','-', '-', ]
 ]
 
 map.forEach((row, i) => {
@@ -111,36 +111,65 @@ map.forEach((row, i) => {
     }
   })
 })
+/* This will function to track if the player overlaps with the boundary walls and reduces the velocity of the user to zero. The player never actually hits the boundary as that would make it so we can't move after hitting a boundary so what we need to do is to add the velocity of the other coordinate as they would be negative when moving in that direction. */
+function collisionDetection({
+  circle,
+  rectangle
+}) {
+  return (
+    /* The top of the player */
+    circle.position.y - circle.radius + circle.velocity.y<= rectangle.position.y + rectangle.height && 
+    /* The right of the circle */
+    circle.position.x + circle.radius + circle.velocity.x >= rectangle.position.x && 
+    /* The bottom of the circle */
+    circle.position.y + circle.radius + circle.velocity.y >= rectangle.position.y && 
+    /* The left of the circle */
+    circle.position.x - circle.radius + circle.velocity.x <= rectangle.position.x + rectangle.width) 
+}
+/* This loop checks whether or not the user player is touching any of the boundaries by grabbing the edges of the x and y coordinates of the boundaries and checking whether or not it overlaps with that of the x and y of the player itself. */
+
+
 
 /* Create an infinite loop to make sure it redraws the Pac-man everytime. */
 function animate() {
   requestAnimationFrame(animate)
   /* So we clear the drawing before drawing another one to prevent the creation of a long line. */
   c.clearRect(0, 0, canvas.width, canvas.height)
+  
+  if (keys.w.pressed && lastKey == 'w') {
+    boundaries.forEach((boundary) => {
+      if (
+        collisionDetection({
+          circle: player,
+          rectangle: boundary
+      })
+      ) {
+        player.velocity.y = -2
+      } 
+    })
+  } else if (keys.a.pressed && lastKey == 'a') {
+    player.velocity.x = -2
+  } else if (keys.s.pressed && lastKey == 's') {
+    player.velocity.y = 2
+  } else if (keys.d.pressed && lastKey == 'd') {
+    player.velocity.x = 2
+  }
+
   boundaries.forEach((boundary) => {
     boundary.draw()
-      /* This will loop to track if the player overlaps with the boundary walls and reduces the velocity of the user to zero. To grab the position of the player when the center point is within a circle we simple need to add or subtract from its position */
-    if (
-      /* The top of the player */
-      player.position.y - player.radius <= boundary.position.y + boundary.height && 
-      player.position.x + player.radius >= boundary.position.x && 
-      player.position.y + player.radius >= boundary.position.y && 
-      player.position.x - player.radius <= boundary.position.x + boundary.width){console.log('we are colliding')}
-    /* This loop checks whether or not the user player is touching any of the boundaries by grabbing the edges of the x and y coordinates of the boundaries and checking whether or not it overlaps with that of the x and y of the player itself. */
+    if (collisionDetection({
+      circle: player,
+      rectangle: boundary
+    }))  
+      {
+        player.velocity.x = 0
+        player.velocity.y = 0
+      }
+
   })
   player.update()
-  player.velocity.y = 0
-  player.velocity.x = 0
-
-  if (keys.w.pressed && lastKey == 'w') {
-    player.velocity.y = -7
-  } else if (keys.a.pressed && lastKey == 'a') {
-    player.velocity.x = -7
-  } else if (keys.s.pressed && lastKey == 's') {
-    player.velocity.y = 7
-  } else if (keys.d.pressed && lastKey == 'd') {
-    player.velocity.x = 7
-  }
+  //player.velocity.y = 0
+  //player.velocity.x = 0
 
 
 }
