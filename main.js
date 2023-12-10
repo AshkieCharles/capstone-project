@@ -52,6 +52,23 @@ class Player {
 
 }
 
+class Pellet {
+  constructor({ position }) {
+    this.position = position
+    this.radius = 3
+  }
+
+  draw() {
+    c.beginPath()
+    c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
+    c.fillStyle = 'white'
+    c.fill()
+    c.closePath
+  }
+}
+
+
+const pellets = []
 /* This creates the blue boxes that prevents the player from leaving the game area. */
 const boundaries = []
 /* This controls where the player will spawn */
@@ -99,7 +116,7 @@ const map = [
   ['|', '.', '[', ']', '.', '.', '.', '[', ']', '.', '|'],
   ['|', '.', '.', '.', '.', '^', '.', '.', '.', '.', '|'],
   ['|', '.', 'b', '.', '[', '5', ']', '.', 'b', '.', '|'],
-  ['|', '.', '.', '.', '.', '.', '.', '.', '.', 'p', '|'],
+  ['|', '.', '.', '.', '.', '.', '.', '.', '.', '.', '|'],
   ['4', '-', '-', '-', '-', '-', '-', '-', '-', '-', '3']
 ]
 
@@ -109,8 +126,6 @@ function createImage(src){
   image.src = src
   return image
 }
-
-
 
 map.forEach((row, i) => {
   row.forEach((symbol, j) => {
@@ -294,19 +309,21 @@ map.forEach((row, i) => {
           })
         )
         break
-      // case '.':
-      //   pellets.push(
-      //     new Pellet({
-      //       position: {
-      //         x: j * Boundary.width + Boundary.width / 2,
-      //         y: i * Boundary.height + Boundary.height / 2
-      //       }
-      //     })
-      //   )
-      //   break
+      case '.':
+        pellets.push(
+          new Pellet({
+            position: {
+              x: j * Boundary.width + Boundary.width / 2,
+              y: i * Boundary.height + Boundary.height / 2
+            }
+          })
+        )
+        break
     }
   })
 })
+
+
 /* This will function to track if the player overlaps with the boundary walls and reduces the velocity of the user to zero. The player never actually hits the boundary as that would make it so we can't move after hitting a boundary so what we need to do is to add the velocity of the other coordinate as they would be negative when moving in that direction. */
 function collisionDetection({
   circle,
@@ -406,6 +423,10 @@ function animate() {
     }
   }
 
+  pellets.forEach((pellet) => {
+    pellet.draw()
+  })
+
   boundaries.forEach((boundary) => {
     boundary.draw()
     if (collisionDetection({
@@ -421,8 +442,6 @@ function animate() {
   player.update()
   //player.velocity.y = 0
   //player.velocity.x = 0
-
-
 }
 
 animate()
