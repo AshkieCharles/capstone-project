@@ -54,7 +54,7 @@ class Player {
 }
 
 class Ghost {
-  static speed = 1
+  static speed = 2
   constructor({
     position, velocity, color = 'red'
   }) {
@@ -63,7 +63,7 @@ class Ghost {
     this.radius = 16
     this.color = color
     this.prevCollisions = []
-    this.speed = 1
+    this.speed = 2
   }
 
   draw() {
@@ -607,22 +607,18 @@ function animate() {
       ghost.prevCollisions = collisions
     if (JSON.stringify(collisions) !== JSON.stringify(ghost.prevCollisions)){
     
-    // This will dive the ghost the idea of which pathway he can go
+    // This will give the ghost array of random directions which a ghost can take a pathway
     if (ghost.velocity.x > 0) ghost.prevCollisions.push('right')
     else if (ghost.velocity.x < 0) ghost.prevCollisions.push('left')
     else if (ghost.velocity.y < 0) ghost.prevCollisions.push('up')
     else if (ghost.velocity.y > 0) ghost.prevCollisions.push('down')
-      
 
       const pathways = ghost.prevCollisions.filter(collision => {
         return !collisions.includes(collision)
       })
-      console.log({pathways})
 
       // This will do the magic of an Ai-looking ghost. This will randomize which direction the ghost will go. This will grab a random integer and round down it so that it can be used as a length for the array.
       const direction = pathways [Math.floor(Math.random() * pathways.length )]
-
-      console.log({direction})
 
       switch (direction){
         case 'down':
