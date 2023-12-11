@@ -54,6 +54,7 @@ class Player {
 }
 
 class Ghost {
+  static speed = 2
   constructor({
     position, velocity, color = 'red'
   }) {
@@ -62,6 +63,7 @@ class Ghost {
     this.radius = 16
     this.color = color
     this.prevCollisions = []
+    this.speed = 2
   }
 
   draw() {
@@ -106,9 +108,20 @@ const ghosts = [
       y:Boundary.height + Boundary.height / 2,
     },
     velocity: {
-      x: 5,
+      x: Ghost.speed,
       y: 0
     }
+  }),
+  new Ghost ({
+    position: {
+      x:Boundary.width * 6 + Boundary.width / 2,
+      y:Boundary.height* 3 + Boundary.height / 2,
+    },
+    velocity: {
+      x: Ghost.speed,
+      y: 0
+    }, 
+    color: 'pink'
   })
 ]
 
@@ -374,23 +387,27 @@ function collisionDetection({
   circle,
   rectangle
 }) {
+  // Will grab the the distance between the center of the circle towards the edge padding of the boundaries.
+  const padding = Boundary.width /2 - circle.radius - 1
   return (
     /* The top of the player */
-    circle.position.y - circle.radius + circle.velocity.y<= rectangle.position.y + rectangle.height && 
+    circle.position.y - circle.radius + circle.velocity.y<= rectangle.position.y + rectangle.height + padding && 
     /* The right of the circle */
-    circle.position.x + circle.radius + circle.velocity.x >= rectangle.position.x && 
+    circle.position.x + circle.radius + circle.velocity.x >= rectangle.position.x - padding && 
     /* The bottom of the circle */
-    circle.position.y + circle.radius + circle.velocity.y >= rectangle.position.y && 
+    circle.position.y + circle.radius + circle.velocity.y >= rectangle.position.y - padding && 
     /* The left of the circle */
-    circle.position.x - circle.radius + circle.velocity.x <= rectangle.position.x + rectangle.width) 
+    circle.position.x - circle.radius + circle.velocity.x <= rectangle.position.x + rectangle.width + padding) 
 }
 /* This loop checks whether or not the user player is touching any of the boundaries by grabbing the edges of the x and y coordinates of the boundaries and checking whether or not it overlaps with that of the x and y of the player itself. */
 
 
 
+let animationId
+
 /* Create an infinite loop to make sure it redraws the Pac-man everytime. */
 function animate() {
-  requestAnimationFrame(animate)
+  animationId = requestAnimationFrame(animate)
   /* So we clear the drawing before drawing another one to prevent the creation of a long line. */
   c.clearRect(0, 0, canvas.width, canvas.height)
   
@@ -508,7 +525,15 @@ function animate() {
 
   ghosts.forEach(ghost => {
     ghost.update()
-
+    if (
+      Math.hypot(
+        ghost.position.x - player.position.x, 
+        ghost.position.y - player.position.y
+        ) < 
+        ghost.radius + player.radius
+      ) {
+        cancelAnimationFrame(animationId)
+      }
     const collisions = []
     boundaries.forEach(boundary => {
       if (
@@ -516,7 +541,7 @@ function animate() {
         !collisions.includes('right')&&
         collisionDetection({
           circle: {...ghost, velocity: {
-            x: 5, 
+            x: ghost.speed, 
             y: 0
           }},
           rectangle: boundary
@@ -529,7 +554,7 @@ function animate() {
         !collisions.includes('left')&&
         collisionDetection({
           circle: {...ghost, velocity: {
-            x: -5, 
+            x: -ghost.speed, 
             y: 0
           }},
           rectangle: boundary
@@ -543,7 +568,7 @@ function animate() {
         collisionDetection({
           circle: {...ghost, velocity: {
             x: 0, 
-            y: -5
+            y: -ghost.speed
           }},
           rectangle: boundary
       })
@@ -556,7 +581,7 @@ function animate() {
         collisionDetection({
           circle: {...ghost, velocity: {
             x: 0, 
-            y: 5
+            y: ghost.speed
           }},
           rectangle: boundary
       })
@@ -590,20 +615,20 @@ function animate() {
 
       switch (direction){
         case 'down':
-          ghost.velocity.y = 5
+          ghost.velocity.y = ghost.speed
           ghost.velocity.x = 0
           break
         case 'up':
-          ghost.velocity.y = -5
+          ghost.velocity.y = -ghost.speed
           ghost.velocity.x = 0
           break
         case 'left':
           ghost.velocity.y = 0
-          ghost.velocity.x = -5
+          ghost.velocity.x = -ghost.speed
           break
         case 'right':
           ghost.velocity.y = 0
-          ghost.velocity.x = 5
+          ghost.velocity.x = ghost.speed
           break
       }
       ghost.prevCollisions = []
