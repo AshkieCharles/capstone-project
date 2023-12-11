@@ -103,7 +103,7 @@ let lastKey = ''
 
 
 
-/* This creates the map for the game. The dashes symbolize the boxes while the space symbolize the playable area. */
+/* This creates the map for the game. */
 const map = [
   ['1', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2'],
   ['|', '.', '.', '.', '.', '.', '.', '.', '.', '.', '|'],
