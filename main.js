@@ -101,6 +101,24 @@ class Pellet {
 }
 
 
+class PowerUp {
+  constructor({ position }) {
+    this.position = position
+    this.radius = 10
+  }
+
+  draw() {
+    c.beginPath()
+    c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
+    c.fillStyle = 'green'
+    c.fill()
+    c.closePath
+  }
+}
+
+
+const powerUps = []
+
 const ghosts = [
   new Ghost ({
     position: {
@@ -177,15 +195,15 @@ const map = [
   ['1', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2'],
   ['|', '.', '.', '.', '.', '.', '.', '.', '.', '.', '|'],
   ['|', '.', 'b', '.', '[', '7', ']', '.', 'b', '.', '|'],
-  ['|', '.', '.', '.', '.', '_', '.', '.', '.', '.', '|'],
-  ['|', '.', '[', ']', '.', '.', '.', '[', ']', '.', '|'],
+  ['|', '.', '.', '.', '.', '_', '.', '.', 'p', '.', '|'],
+  ['|', '.', '[', ']', 'p', '.', '.', '[', ']', '.', '|'],
   ['|', '.', '.', '.', '.', '^', '.', '.', '.', '.', '|'],
   ['|', '.', 'b', '.', '[', '+', ']', '.', 'b', '.', '|'],
   ['|', '.', '.', '.', '.', '_', '.', '.', '.', '.', '|'],
   ['|', '.', '[', ']', '.', '.', '.', '[', ']', '.', '|'],
-  ['|', '.', '.', '.', '.', '^', '.', '.', '.', '.', '|'],
+  ['|', '.', '.', 'p', '.', '^', '.', '.', '.', '.', '|'],
   ['|', '.', 'b', '.', '[', '5', ']', '.', 'b', '.', '|'],
-  ['|', '.', '.', '.', '.', '.', '.', '.', '.', '.', '|'],
+  ['|', '.', '.', '.', '.', '.', '.', '.', '.', 'p', '|'],
   ['4', '-', '-', '-', '-', '-', '-', '-', '-', '-', '3']
 ]
 
@@ -388,6 +406,17 @@ map.forEach((row, i) => {
           })
         )
         break
+
+        case 'p':
+          powerUps.push(
+            new PowerUp({
+              position: {
+                x: j * Boundary.width + Boundary.width / 2,
+                y: i * Boundary.height + Boundary.height / 2
+              }
+            })
+          )
+          break
     }
   })
 })
@@ -495,8 +524,25 @@ function animate() {
       }
     }
   }
+  //Power Ups
+  for (let i = powerUps.length - 1; 0 <= i; i--){
+    const powerUp = powerUps[i]
+    powerUp.draw()
+    if (
+      Math.hypot
+      (powerUp.position.x - player.position.x, 
+        powerUp.position.y - player.position.y
+        ) < 
+        powerUp.radius + player.radius
+        )
+        {
+          powerUps.splice(i, 1)
+        }
 
-  for (let i = pellets.length - 1; 0 < i; i--){
+  }
+
+
+  for (let i = pellets.length - 1; 0 <= i; i--){
     const pellet = pellets[i]
 
     pellet.draw()
