@@ -54,7 +54,7 @@ class Player {
 }
 
 class Ghost {
-  static speed = 2
+  static speed = 1
   constructor({
     position, velocity, color = 'red'
   }) {
@@ -63,7 +63,7 @@ class Ghost {
     this.radius = 16
     this.color = color
     this.prevCollisions = []
-    this.speed = 2
+    this.speed = 1
   }
 
   draw() {
