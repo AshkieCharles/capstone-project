@@ -94,7 +94,6 @@ const map = [
 
 map.forEach((row, i) => {
   row.forEach((symbol, j) => {
-    console.log(symbol)
     switch (symbol) {
       /* Whenever we hit a dashed line we create a a box and break the loop and reiterate the loop again before hitting another symbol. */
       case '-':
