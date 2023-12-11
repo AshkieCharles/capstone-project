@@ -64,12 +64,13 @@ class Ghost {
     this.color = color
     this.prevCollisions = []
     this.speed = 2
+    this.scared = false
   }
 
   draw() {
     c.beginPath()
     c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
-    c.fillStyle = this.color
+    c.fillStyle = this.scared ? 'blue' : this.color
     c.fill()
     c.closePath
   }
@@ -524,10 +525,32 @@ function animate() {
       }
     }
   }
+
+
+// Detect collisions between player and ghosts
+for (let i = ghosts.length - 1; 0 <= i; i--){
+    const ghost = ghosts[i]
+      // Player touches ghost
+      if (
+        Math.hypot(
+          ghost.position.x - player.position.x, 
+          ghost.position.y - player.position.y
+          ) < // This will make sure the when the ghost is scared it won't hurt you.
+          ghost.radius + player.radius 
+        ) {
+          if (ghost.scared) {
+            ghosts.splice(i, 1)
+          } else {
+            cancelAnimationFrame(animationId)
+          }
+          
+        }
+      }
   //Power Ups
   for (let i = powerUps.length - 1; 0 <= i; i--){
     const powerUp = powerUps[i]
     powerUp.draw()
+    // Player collision with power
     if (
       Math.hypot
       (powerUp.position.x - player.position.x, 
@@ -537,6 +560,14 @@ function animate() {
         )
         {
           powerUps.splice(i, 1)
+          ghosts.forEach(ghost => {
+            ghost.scared = true
+
+            setTimeout(() => {
+              ghost.scared = false
+            }, 6000)
+          })
+
         }
 
   }
@@ -582,15 +613,7 @@ function animate() {
 
   ghosts.forEach(ghost => {
     ghost.update()
-    if (
-      Math.hypot(
-        ghost.position.x - player.position.x, 
-        ghost.position.y - player.position.y
-        ) < 
-        ghost.radius + player.radius
-      ) {
-        cancelAnimationFrame(animationId)
-      }
+
     const collisions = []
     boundaries.forEach(boundary => {
       if (
