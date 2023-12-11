@@ -1,5 +1,7 @@
 const canvas = document.querySelector('canvas')
 /** this is a 2d game */
+const score = document.querySelector('#score')
+console.log(score)
 const c = canvas.getContext('2d');
 
 
@@ -100,6 +102,7 @@ const keys = {
 }
 
 let lastKey = ''
+let lastScore = 0
 
 
 
@@ -423,9 +426,29 @@ function animate() {
     }
   }
 
-  pellets.forEach((pellet) => {
+  for (let i = pellets.length - 1; 0 < i; i--){
+    const pellet = pellets[i]
+
     pellet.draw()
-  })
+
+    // This will detect the longest part of the pellet that will be detected to remove it
+    if (
+      Math.hypot
+      (pellet.position.x - player.position.x, 
+        pellet.position.y - player.position.y
+        ) < 
+        pellet.radius + player.radius
+        ) {
+          // The array we had earlier will now lose one pellet each time the user interacts with it.
+      pellets.splice(i, 1)
+      lastScore += 10
+      score.innerHTML = lastScore
+
+    }
+
+  }
+
+
 
   boundaries.forEach((boundary) => {
     boundary.draw()
