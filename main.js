@@ -543,9 +543,15 @@ for (let i = ghosts.length - 1; 0 <= i; i--){
           } else {
             cancelAnimationFrame(animationId)
           }
-          
         }
       }
+
+
+  // Win Condition
+  if (pellets.length == 0){
+    alert("You win!")
+    cancelAnimationFrame(animationId)
+  }
   //Power Ups
   for (let i = powerUps.length - 1; 0 <= i; i--){
     const powerUp = powerUps[i]
