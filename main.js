@@ -579,6 +579,7 @@ for (let i = ghosts.length - 1; 0 <= i; i--){
         powerUp.radius + player.radius
         )
         {
+          // The moment Pac-Man touches the power up the ghost go into a scared state
           powerUps.splice(i, 1)
           ghosts.forEach(ghost => {
             ghost.scared = true
@@ -589,7 +590,6 @@ for (let i = ghosts.length - 1; 0 <= i; i--){
           })
 
         }
-
   }
 
 
@@ -696,7 +696,7 @@ for (let i = ghosts.length - 1; 0 <= i; i--){
       ghost.prevCollisions = collisions
     if (JSON.stringify(collisions) !== JSON.stringify(ghost.prevCollisions)){
     
-    // This will give the ghost array of random directions which a ghost can take a pathway
+    // This will give the ghost array random directions which a ghost can take
     if (ghost.velocity.x > 0) ghost.prevCollisions.push('right')
     else if (ghost.velocity.x < 0) ghost.prevCollisions.push('left')
     else if (ghost.velocity.y < 0) ghost.prevCollisions.push('up')
@@ -732,7 +732,7 @@ for (let i = ghosts.length - 1; 0 <= i; i--){
     }
   })
 
-
+  // Adds the rotation of Pac-Man after he faces a new direction
   if (player.velocity.x > 0) player.rotation = 0
   else if (player.velocity.x < 0) player.rotation = Math.PI
   else if (player.velocity.y > 0) player.rotation = Math.PI / 2
