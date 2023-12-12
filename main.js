@@ -553,7 +553,9 @@ for (let i = ghosts.length - 1; 0 <= i; i--){
           if (ghost.scared) {
             ghosts.splice(i, 1)
           } else {
+            alert('You Lost')
             cancelAnimationFrame(animationId)
+            
           }
         }
       }
