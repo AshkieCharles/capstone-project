@@ -748,7 +748,6 @@ animate()
 window.addEventListener('keydown', ({ key }) => {
   switch (key) {
     case 'w':
-      /* The reason why it is a negative number is because in web dev everything starts from the top so it starts from zero. */
     keys.w.pressed = true
     lastKey = 'w'
     break
@@ -770,7 +769,6 @@ window.addEventListener('keydown', ({ key }) => {
 window.addEventListener('keyup', ({ key }) => {
   switch (key) {
     case 'w':
-      /* The reason why it is a negative number is because in web dev everything starts from the top so it starts from zero. */
     keys.w.pressed = false
     break
     case 'a':
